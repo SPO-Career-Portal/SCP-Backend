@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     name=models.CharField(max_length=120)
-    username=models.CharField(max_length=30, unique=True)
-    batch=models.CharField(max_length=3)
-    program=models.CharField(max_length=10)
+    username=models.CharField(max_length=40, unique=True)
+    batch=models.CharField(max_length=15)
+    program=models.CharField(max_length=20)
     department=models.CharField(max_length=50)
     githubLink=models.URLField(max_length=100,unique=True,null=True)
     linkedinLink=models.URLField(max_length=200,unique=True,null=True)
