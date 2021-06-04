@@ -1,1 +1,3 @@
 db.sqlite3
+placement/__pycache__/
+placement/migrations/
