@@ -1,7 +1,7 @@
 __pycache__/
-/**/__pycache__
+**/__pycache__
 .vscode
 **/migrations/*
 .DS_Store
 **/.DS_Store
-
+db.sqlite3
