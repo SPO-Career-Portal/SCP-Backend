@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "placement.apps.PlacementConfig",
     "intern.apps.InternConfig",
     "django.contrib.admin",
     "django.contrib.auth",
