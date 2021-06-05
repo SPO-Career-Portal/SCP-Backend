@@ -8,7 +8,7 @@ class Placement(models.Model):
     description = models.CharField(max_length=1500)
     eligible_batches = models.JSONField(default=list)
     eligible_branches = models.JSONField(default=list)
-    eligible_programes = models.JSONField(default=list)
+    eligible_programmes = models.JSONField(default=list)
     deadline = models.DateTimeField("deadline")
 
     def __str__(self):
