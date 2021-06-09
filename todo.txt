@@ -1,0 +1,5 @@
+remove 
+    checkserver from src/urls.py
+    delete views.py
+
+remove : users/urls and views : database
