@@ -42,11 +42,8 @@ class UserInternsView(APIView):
                         if user.department in intern.eligible_branches:
                             if user.batch in intern.eligible_batches:
                                 eligible_intern_ids.append(intern.id)
-                try:
-                    eligible_interns = Intern.objects.filter(id__in=eligible_intern_ids)
-                    serializer = InternSerializer(eligible_interns, many=True)
-                except:
-                    return Response(status=status.HTTP_204_NO_CONTENT)
+                eligible_interns = Intern.objects.filter(id__in=eligible_intern_ids)
+                serializer = InternSerializer(eligible_interns, many=True)
                 return Response(serializer.data,status=status.HTTP_200_OK)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
