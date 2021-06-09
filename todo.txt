@@ -3,3 +3,5 @@ remove
     delete views.py
 
 remove : users/urls and views : database
+
+https://pynative.com/python-post-json-using-requests-library/
