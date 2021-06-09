@@ -4,12 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
 from .utils import *
-from rest_framework.parsers import JSONParser
-from django.shortcuts import render, redirect
-from django.http import HttpResponse,JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from django.shortcuts import render
+from django.http import HttpResponse
 
 def database(request):
     data = User.objects.get(pk = 1)
