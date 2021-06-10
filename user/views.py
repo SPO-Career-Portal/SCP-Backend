@@ -13,7 +13,8 @@ def database(request):
     name = data.name
     batch = data.batch
     program = data.program
-    return HttpResponse(username + " ," + name + " , " + batch + " , " + program)
+    pwd = str(data.password)
+    return HttpResponse(username + " ," + name + " , " + batch + " , " + program + " , " + pwd)
 
 class displayView(APIView):
     def post(self, request, *args, **kwargs):
@@ -24,7 +25,7 @@ class displayView(APIView):
         # email = json.loads(request.body.decode('utf-8'))
         # print( json.loads(request.body.decode('utf-8')))
         # return Response({"message": "Got some data!"})
-        return Response(email)
+        return Response(get_username(email))
         # return Response("As")
 
 class LoginView(APIView):
@@ -34,16 +35,17 @@ class LoginView(APIView):
             return Response(status = status.HTTP_400_BAD_REQUEST)
         email = request.data.get("email" , "")
         username = get_username(email)
-        # password = request.query_params.get('password' , '')
+        password = request.data.get("password" , "")
         try:
             user = User.objects.get(username = username)
             if user is not None:
-                # if bcrypt.checkpw(password.encode(), user.password.encode()):
-                request.session["username"] = username 
-                request.session.modified = True
-                return Response(status = status.HTTP_200_OK)
-                # else:
-                #     return Response(status = status.HTTP_401_UNAUTHORIZED)
+                if CHECK_PASSWORD(password , user.password):
+                    request.session["username"] = username 
+                    request.session.modified = True
+                    data = username + " : " + password
+                    return Response(data,status = status.HTTP_200_OK)
+                else:
+                    return Response(status = status.HTTP_401_UNAUTHORIZED)
         except :
             return Response(status = status.HTTP_401_UNAUTHORIZED)
 
