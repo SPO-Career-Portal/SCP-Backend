@@ -7,27 +7,6 @@ from .utils import *
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def database(request):
-    data = User.objects.get(pk = 1)
-    username = data.username
-    name = data.name
-    batch = data.batch
-    program = data.program
-    pwd = str(data.password)
-    return HttpResponse(username + " ," + name + " , " + batch + " , " + program + " , " + pwd)
-
-class displayView(APIView):
-    def post(self, request, *args, **kwargs):
-        # email = request.body("email" , "")
-        # email = json.loads(request.body)
-        email = request.data.get("email")
-        # email = emails["email"]
-        # email = json.loads(request.body.decode('utf-8'))
-        # print( json.loads(request.body.decode('utf-8')))
-        # return Response({"message": "Got some data!"})
-        return Response(get_username(email))
-        # return Response("As")
-
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         user = IsLoggedIn(request)
@@ -42,8 +21,7 @@ class LoginView(APIView):
                 if CHECK_PASSWORD(password , user.password):
                     request.session["username"] = username 
                     request.session.modified = True
-                    data = username + " : " + password
-                    return Response(data,status = status.HTTP_200_OK)
+                    return Response(status = status.HTTP_200_OK)
                 else:
                     return Response(status = status.HTTP_401_UNAUTHORIZED)
         except :
