@@ -7,7 +7,7 @@ class userserializer(serializers.ModelSerializer) :
         model=User
         fields=('name',
                 'username',
-                'roll_number',
+                'roll',
                 'batch',
                 'program',
                 'department',
