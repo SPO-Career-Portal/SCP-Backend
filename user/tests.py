@@ -1,4 +1,3 @@
-from django.db import reset_queries
-from django.test import TestCase, Client
+from django.test import TestCase
 
 # Create your tests here.
