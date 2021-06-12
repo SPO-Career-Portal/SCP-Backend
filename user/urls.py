@@ -6,10 +6,8 @@ from rest_framework import routers, urlpatterns
 from .views import *
 
 
-
 urlpatterns = [
-    path("users/", views.Userview.as_view(), name="view-user"),
+    path("profile/", views.UserView.as_view(), name="view-user"),
     path("placements/", UserPlacementsView.as_view(), name="user_placements"),
     path("interns/", UserInternsView.as_view(), name="user_interns"),
 ]
-
