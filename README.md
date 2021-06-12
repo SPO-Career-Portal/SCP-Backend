@@ -2,6 +2,29 @@
 ## API Endpoints
 A description of all the API endpoints, their URL and request parameters.
 ### Users
+#### View Users
+```
+url: /user/users/
+method: GET
+
+Successful : 200_OK
+Response : {
+             "name"
+             "username"
+             "roll"
+             "batch"
+             "program"
+             "department"
+             "github"
+             "linkedin"
+             "mastercv"
+             "resume1"
+             "resume2"
+            }
+Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
+
+NOTE : User needs to be logged in to use this API.                         
+```
 #### View Placements
 ```
 url : /user/placements/
