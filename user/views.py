@@ -17,11 +17,6 @@ from intern.models import Intern
 from intern.serializers import InternSerializer
 
 
-
-
-
-
-
 class UserPlacementsView(APIView):
     def get(self, request):
         user = IsLoggedIn(request)
