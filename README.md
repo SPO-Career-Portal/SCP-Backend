@@ -2,7 +2,7 @@
 ## API Endpoints
 A description of all the API endpoints, their URL and request parameters.
 ### Users
-#### View Users
+#### View User Profile
 ```
 url: /user/profile/
 method: GET
