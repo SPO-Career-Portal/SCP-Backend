@@ -1,9 +1,9 @@
+from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn
 from django.contrib.auth import login, logout
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
-from .utils import *
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -13,8 +13,7 @@ class Login(APIView):
         user = IsLoggedIn(request)
         if user is not None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        email = request.data.get("email", "")
-        username = get_username(email)
+        username = request.data.get("username", "")
         password = request.data.get("password", "")
         try:
             user = User.objects.get(username=username, activated=True)
