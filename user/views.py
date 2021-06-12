@@ -18,9 +18,9 @@ class Userview(APIView):
         try:
             user = IsLoggedIn(request)
             if user is None:
-                return HttpResponse("Unauthorized", status=401)
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except:
-            return HttpResponse("Bad Request", status=400)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
