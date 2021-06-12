@@ -9,7 +9,7 @@ class Intern(models.Model):
     description = models.CharField(max_length=5000)
     eligible_batches = models.JSONField(default=list)
     eligible_branches = models.JSONField(default=list)
-    eligible_programs = models.JSONField(default=list)
+    eligible_programmes = models.JSONField(default=list)
     deadline = models.DateTimeField()
     intern_start_month = models.CharField(max_length=500)
     intern_end_month = models.CharField(max_length=500)
