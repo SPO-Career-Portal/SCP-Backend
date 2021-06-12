@@ -60,7 +60,7 @@ class UserInternsView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class Userview(APIView):
+class UserView(APIView):
     def get(self, request):
         try:
             user = IsLoggedIn(request)
