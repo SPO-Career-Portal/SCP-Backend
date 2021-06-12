@@ -4,7 +4,7 @@ A description of all the API endpoints, their URL and request parameters.
 ### Users
 #### View Users
 ```
-url: /user/users/
+url: /user/profile/
 method: GET
 
 Successful : 200_OK
