@@ -5,6 +5,4 @@ from rest_framework import routers, urlpatterns
 
 from . import views
 
-app_name = "User"
-
 urlpatterns = [path("users/", views.Userview.as_view(), name="view-user")]
