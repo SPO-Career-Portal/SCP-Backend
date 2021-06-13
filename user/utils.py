@@ -16,11 +16,8 @@ def CHECK_PASSWORD(password, hash):
 def IsLoggedIn(request):
     if request.session.has_key("username"):
         try:
-            user = User.objects.get(
-                username=request.session["username"], activated=True
-            )
+            user = User.objects.get(username=request.session["username"])
             return user
-
         except:
             return None
     else:

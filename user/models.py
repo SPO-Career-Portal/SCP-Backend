@@ -1,10 +1,10 @@
 from django.db import models
-from django.db.models.expressions import F
 
 # Create your models here.
 class User(models.Model):
     name = models.CharField(max_length=120)
     username = models.CharField(max_length=40, unique=True)
+    roll = models.CharField(max_length=10, unique=True)
     batch = models.CharField(max_length=20)
     program = models.CharField(max_length=20)
     department = models.CharField(max_length=50)

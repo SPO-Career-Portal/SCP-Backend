@@ -12,4 +12,4 @@ class Placement(models.Model):
     deadline = models.DateTimeField("deadline")
 
     def __str__(self):
-        return self.placement_text
+        return self.placement_name
