@@ -33,6 +33,7 @@ method : GET
 Successful : 200_OK
 Response : [
                 {
+                    "key",
                     "placement_name", 
                     "company", 
                     "role", 
@@ -54,6 +55,7 @@ method : GET
 Successful : 200_OK
 Response : [
                 {
+                    "key",
                     "intern_name", 
                     "company", 
                     "duration", 
