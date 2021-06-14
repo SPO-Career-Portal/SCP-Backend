@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers, urlpatterns
 from .views import *
 
+
 urlpatterns = [
     path("profile/", UserView.as_view(), name="view-user"),
     path("placements/", UserPlacementsView.as_view(), name="user_placements"),
