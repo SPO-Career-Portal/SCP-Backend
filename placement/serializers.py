@@ -5,4 +5,4 @@ from .models import Placement
 class PlacementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Placement
-        fields = ("placement_name", "company", "role", "description", "deadline")
+        fields = ("key", "placement_name", "company", "role", "description", "deadline")
