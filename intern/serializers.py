@@ -6,6 +6,7 @@ class InternSerializer(serializers.ModelSerializer):
     class Meta:
         model = Intern
         fields = (
+            "key",
             "intern_name",
             "company",
             "duration",
