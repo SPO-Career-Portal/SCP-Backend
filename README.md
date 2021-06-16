@@ -33,6 +33,7 @@ method : GET
 Successful : 200_OK
 Response : [
                 {
+                    "key",
                     "placement_name", 
                     "company", 
                     "role", 
@@ -54,6 +55,7 @@ method : GET
 Successful : 200_OK
 Response : [
                 {
+                    "key",
                     "intern_name", 
                     "company", 
                     "duration", 
@@ -69,4 +71,28 @@ Response : [
 Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
 
 Note : User needs to be logged in to use this API.
+```
+
+#### Login
+```
+url : /users/auth/login/
+method : POST
+parameters = {
+    "username" : "<username>",
+    "password" : "<password>:
+    }
+```
+```
+Successful : 200_OK
+Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Logout
+```
+url : /users/auth/logout/
+method : POST
+parameters = {}
+```
+```
+Successful : 200_OK
+Unsuccessful : 401_UNAUTHORIZED
 ```
