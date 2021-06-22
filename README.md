@@ -79,7 +79,7 @@ url : /users/auth/login/
 method : POST
 parameters = {
     "username" : "<username>",
-    "password" : "<password>
+    "password" : "<password>"
     }
 ```
 ```
