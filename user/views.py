@@ -16,6 +16,7 @@ from placement.models import Placement
 from placement.serializers import PlacementSerializer
 from intern.models import Intern
 from intern.serializers import InternSerializer
+from django.views.decorators.csrf import csrf_exempt
 
 
 class UserPlacementsView(APIView):
@@ -111,3 +112,62 @@ class Logout(APIView):
             del request.session["username"]
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+# @csrf_exempt
+@api_view(["POST"])
+def InternRegistration(request, token):
+    if request.method == "POST":
+        user = IsLoggedIn(request)
+        if user is not None:
+            try:
+                intern_applied = Intern.objects.get(key=token)
+                if (
+                    user.program in intern_applied.eligible_programmes
+                    and user.department in intern_applied.eligible_branches
+                    and user.batch in intern_applied.eligible_batches
+                    and not user.placements_applied_for.exists()
+                ):
+                    user.interns_applied_for.add(intern_applied)
+                    response = {
+                        "message": "You have successfully registered for this internship"
+                    }
+                    return Response(response, status=status.HTTP_200_OK)
+                else:
+                    response = {"message": "You are not eligible for this intership"}
+                    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+# @csrf_exempt
+@api_view(["POST"])
+def PlacementRegistration(request, token):
+    if request.method == "POST":
+        user = IsLoggedIn(request)
+        if user is not None:
+            try:
+                placement_applied = Placement.objects.get(key=token)
+                if (
+                    user.program in placement_applied.eligible_programmes
+                    and user.department in placement_applied.eligible_branches
+                    and user.batch in placement_applied.eligible_batches
+                    and not user.interns_applied_for.exists()
+                ):
+                    user.placements_applied_for.add(placement_applied)
+                    response = {
+                        "message": "You have successfully registered for this placement offer"
+                    }
+                    return Response(response, status=status.HTTP_200_OK)
+                else:
+                    response = {
+                        "message": "You are not eligible for this placement offer"
+                    }
+                    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            Response(status=status.HTTP_401_UNAUTHORIZED)

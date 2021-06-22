@@ -79,7 +79,7 @@ url : /users/auth/login/
 method : POST
 parameters = {
     "username" : "<username>",
-    "password" : "<password>:
+    "password" : "<password>
     }
 ```
 ```
@@ -94,5 +94,27 @@ parameters = {}
 ```
 ```
 Successful : 200_OK
+Unsuccessful : 401_UNAUTHORIZED
+
+
+```
+#### Intern Registration
+```
+url: /user/internRegistration/<str:token>/
+method: POST     
+Successful : 200_OK
+Response : {
+                "message"
+           }
+Unsuccessful : 401_UNAUTHORIZED
+```
+#### Placement Registration
+```
+url: /user/placementRegistration/<str:token>/
+method: POST
+Successful : 200_OK
+Response : {
+                "message"
+           }
 Unsuccessful : 401_UNAUTHORIZED
 ```
