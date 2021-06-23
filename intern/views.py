@@ -22,7 +22,7 @@ class Register(APIView):
                     user.program in intern_applied.eligible_programmes
                     and user.department in intern_applied.eligible_branches
                     and user.batch in intern_applied.eligible_batches
-                     ):
+                ):
                     user.interns_applied_for.add(intern_applied)
                     response = {
                         "message": "You have successfully registered for this internship"
@@ -35,5 +35,4 @@ class Register(APIView):
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            
             return Response(status=status.HTTP_401_UNAUTHORIZED)
