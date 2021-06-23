@@ -1,25 +1,28 @@
-from user.utils import  IsLoggedIn
+from user.utils import IsLoggedIn
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from user.models import User
 from django.http import response
 from django import http
-from rest_framework import  status
+from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from intern.models import Intern
 
 
-
-
 # Create your views here.
 
-class register(APIView):
-    def post(self,request, token):
+class Register(APIView):
+    def post(self, request):
         # if request.method == "POST":
         user = IsLoggedIn(request)
+        if user is None:
+            response = {
+                "message": "You are not eligible for  Placement and Internships"
+            }
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         if user is not None:
             try:
-                intern_applied = Intern.objects.get(key=token)
+                intern_applied = Intern.objects.get(key=request.data['token'])
                 if (
                     user.program in intern_applied.eligible_programmes
                     and user.department in intern_applied.eligible_branches
@@ -38,4 +41,7 @@ class register(APIView):
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            Response(status=status.HTTP_401_UNAUTHORIZED)
+            response = {
+                "message": "You are not eligible for Placement and internships"
+            }
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)

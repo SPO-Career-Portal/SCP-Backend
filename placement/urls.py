@@ -6,6 +6,6 @@ from .views import *
 
 
 urlpatterns = [
-    path("register/<str:token>/", register.as_view(), name="register-user"),
+    path("register/", Register.as_view(), name="register-user"),
     
 ]
