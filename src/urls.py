@@ -21,4 +21,6 @@ urlpatterns = [
     # path("user/", include("user.urls"))
     path("admin/", admin.site.urls),
     path("user/", include("user.urls")),
+    path("intern/", include("intern.urls")),
+    path("placement/", include("placement.urls")),
 ]

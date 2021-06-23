@@ -11,6 +11,4 @@ urlpatterns = [
     path("interns/", UserInternsView.as_view(), name="user_interns"),
     path("auth/login/", Login.as_view(), name="auth-login"),
     path("auth/logout/", Logout.as_view(), name="auth-logout"),
-    path("placementRegistration/<str:token>/", PlacementRegistration, name="placement-registration"),
-    path("internRegistration/<str:token>/", InternRegistration, name="intern-registration"),
 ]

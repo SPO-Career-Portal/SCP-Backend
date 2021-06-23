@@ -18,5 +18,4 @@ class UserSerializer(serializers.ModelSerializer):
             "mastercv",
             "resume1",
             "resume2",
-            
         )
