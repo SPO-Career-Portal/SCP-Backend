@@ -23,8 +23,7 @@ class Register(APIView):
                     user.program in placement_applied.eligible_programmes
                     and user.department in placement_applied.eligible_branches
                     and user.batch in placement_applied.eligible_batches
-                    and not user.interns_applied_for.exists()
-                ):
+                    ):
                     user.placements_applied_for.add(placement_applied)
                     response = {
                         "message": "You have successfully registered for this placement offer"
@@ -36,8 +35,6 @@ class Register(APIView):
                     }
                     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             except:
-                    response = {
-                        "message": "You are not eligible for Placement and internships"
-                    }
-                    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                    
+                    return Response(status=status.HTTP_401_UNAUTHORIZED)
         
