@@ -1,21 +1,27 @@
-from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn
+from rest_framework import parsers
+from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn, IsRegistered
 from django.contrib.auth import login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
-from django.shortcuts import render
+from src.settings_email import *
+from django.shortcuts import render, redirect
 from django.http import response
 from django import http
 from django.http.response import HttpResponse, JsonResponse
+from django.contrib.auth.hashers import check_password
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.serializers import Serializer
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from user.serializers import UserSerializer
 from rest_framework.parsers import JSONParser
 from placement.models import Placement
 from placement.serializers import PlacementSerializer
 from intern.models import Intern
 from intern.serializers import InternSerializer
+from django.core.mail import *
+import bcrypt
 
 
 class UserPlacementsView(APIView):
@@ -111,3 +117,143 @@ class Logout(APIView):
             del request.session["username"]
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+def ActivationMailer(request):
+    if request.method == "POST":
+        try:
+            roll_number = request.data["roll"]
+            user_data = User.objects.get(roll=roll_number)
+            sender = EMAIL_HOST_USER
+            recipient = user_data.email
+            name = user_data.name
+            user_code = user_data.generate_verification_code()
+            user_link = EMAIL_LINK["Activation"].format(code=user_code)
+            subject = EMAIL_SUBJECT["Activation"]
+            body = EMAIL_BODY["Activation"].format(name=name, link=user_link)
+            send_mail(subject, body, sender, [recipient], fail_silently=False)
+            return redirect(REDIRECT_LINK["Activation"])
+        except:
+            return HttpResponse("Please set up email host details!", status=206)
+    else:
+        return HttpResponse("Bad Request", status=400)
+
+
+class RegisterationView(APIView):
+    def post(self, request):
+        if IsRegistered(request) is False:
+            ActivationMailer(request)
+            return Response(status.HTTP_202_ACCEPTED)
+        if IsRegistered(request) is True:
+            return Response(status.HTTP_403_FORBIDDEN)
+        if IsRegistered(request) is None:
+            return Response(status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+
+def Hashpass(password):
+    password = password.encode()
+    return bcrypt.hashpw(password, bcrypt.gensalt())
+
+
+class SetPasswordAndActivate(APIView):
+    def post(self, request, token):
+        try:
+            pw = request.data["password"]
+            user_data = User.objects.get(verification_code=token)
+            if user_data.activated == False:
+                user_data.activated = True
+                user_data.password = Hashpass(pw).decode()
+                user_data.save()
+                response = {
+                    "status": "success",
+                    "code": status.HTTP_200_OK,
+                    "message": "Password set succesfully and now you are registered",
+                }
+                return Response(response)
+            else:
+                response = {
+                    "code": "status.HTTP_401_UNAUTHORIZED",
+                    "message": "Token already used",
+                }
+                return Response(response, status=401)
+        except:
+            response = {
+                "code": "status.HTTP_401_UNAUTHORIZED",
+                "message": "Invalid token or invalid request",
+            }
+        return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ResetPasswordEmail(APIView):
+    def post(self, request):
+        try:
+            roll_no = request.data["roll"]
+            user_data = User.objects.get(roll=roll_no)
+            sender = EMAIL_HOST_USER
+            recipient = user_data.email
+            name = user_data.name
+            user_code = user_data.generate_verification_code()
+            user_link = EMAIL_LINK["PasswordReset"].format(code=user_code)
+            subject = EMAIL_SUBJECT["PasswordReset"]
+            body = EMAIL_BODY["PasswordReset"].format(name=name, link=user_link)
+            send_mail(subject, body, sender, [recipient], fail_silently=False)
+            return redirect(REDIRECT_LINK["PasswordReset"])
+        except:
+            return HttpResponse("Please set up email host details!", status=206)
+
+
+def pass_checker(old, password):
+    return bcrypt.checkpw(old.encode(), password)
+
+
+class ResetPassword(APIView):
+    def post(self, request, token):
+        try:
+            new1 = request.data["new_password1"]
+            new2 = request.data["new_password2"]
+            old = request.data["old_password"]
+            user_data = User.objects.get(verification_code=token)
+            password = user_data.password
+            password = password.encode()
+            if user_data.activated == True:
+                if new1 == new2:
+                    if pass_checker(old, password) == True:
+                        user_data.password = Hashpass(new1).decode()
+                        user_data.save()
+                        response = {
+                            "status": "success",
+                            "code": status.HTTP_200_OK,
+                            "message": "Password reset succesfull and now you can login",
+                        }
+                        return Response(response)
+                    else:
+                        response = {
+                            "status": "failure",
+                            "code": status.HTTP_401_UNAUTHORIZED,
+                            "message": "wrong old password",
+                        }
+                        return Response(response)
+                else:
+                    response = {
+                        "status": "failure",
+                        "code": 401,
+                        "message": "the retyped password doesn't match",
+                    }
+                    return Response(response)
+
+            else:
+                response = {
+                    "code": "status.HTTP_401_UNAUTHORIZED",
+                    "message": "Unauthorised user or Account not activated",
+                }
+                return Response(response, status=401)
+
+        except:
+            response = {
+                "code": "status.HTTP_401_UNAUTHORIZED",
+                "message": "Invalid token or invalid request",
+            }
+            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
