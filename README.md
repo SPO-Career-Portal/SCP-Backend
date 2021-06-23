@@ -101,7 +101,10 @@ Unsuccessful : 401_UNAUTHORIZED
 #### Intern Registration
 ```
 url: /intern/register/
-method: POST     
+method: POST 
+parameters:{
+                "token"
+            }    
 Successful : 200_OK
 Response : {
                 "message"
@@ -112,6 +115,9 @@ Unsuccessful : 401_UNAUTHORIZED
 ```
 url: /placement/register/
 method: POST
+parameters:{
+                "token"
+            }    
 Successful : 200_OK
 Response : {
                 "message"
