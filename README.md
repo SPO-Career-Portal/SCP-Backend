@@ -100,7 +100,7 @@ Unsuccessful : 401_UNAUTHORIZED
 ```
 #### Intern Registration
 ```
-url: /user/internRegistration/<str:token>/
+url: /intern/register/<str:token>/
 method: POST     
 Successful : 200_OK
 Response : {
@@ -110,7 +110,7 @@ Unsuccessful : 401_UNAUTHORIZED
 ```
 #### Placement Registration
 ```
-url: /user/placementRegistration/<str:token>/
+url: /placement/register/<str:token>/
 method: POST
 Successful : 200_OK
 Response : {
