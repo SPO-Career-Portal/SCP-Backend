@@ -95,8 +95,6 @@ parameters = {}
 ```
 Successful : 200_OK
 Unsuccessful : 401_UNAUTHORIZED
-
-
 ```
 #### Intern Registration
 ```
