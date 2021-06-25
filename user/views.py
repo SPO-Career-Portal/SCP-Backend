@@ -4,7 +4,13 @@ from django.contrib.auth import login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
-from src.settings_email import *
+from src.settings_email import (
+    REDIRECT_LINK,
+    EMAIL_BODY,
+    EMAIL_HOST_USER,
+    EMAIL_LINK,
+    EMAIL_SUBJECT,
+)
 from django.shortcuts import render, redirect
 from django.http import response
 from django import http
@@ -20,7 +26,7 @@ from placement.models import Placement
 from placement.serializers import PlacementSerializer
 from intern.models import Intern
 from intern.serializers import InternSerializer
-from django.core.mail import *
+from django.core.mail import send_mail
 import bcrypt
 
 
@@ -153,7 +159,7 @@ class RegisterationView(APIView):
         return Response(status.HTTP_400_BAD_REQUEST)
 
 
-def Hashpass(password):
+def hashpass(password):
     password = password.encode()
     return bcrypt.hashpw(password, bcrypt.gensalt())
 
@@ -165,7 +171,7 @@ class SetPasswordAndActivate(APIView):
             user_data = User.objects.get(verification_code=token)
             if user_data.activated == False:
                 user_data.activated = True
-                user_data.password = Hashpass(pw).decode()
+                user_data.password = hashpass(pw).decode()
                 user_data.save()
                 response = {
                     "status": "success",
@@ -200,7 +206,10 @@ class ResetPasswordEmail(APIView):
             subject = EMAIL_SUBJECT["PasswordReset"]
             body = EMAIL_BODY["PasswordReset"].format(name=name, link=user_link)
             send_mail(subject, body, sender, [recipient], fail_silently=False)
-            return redirect(REDIRECT_LINK["PasswordReset"])
+            return HttpResponse(
+                "Password Reset Email sent successfully, Please Check your inbox.",
+                status=200,
+            )
         except:
             return HttpResponse("Please set up email host details!", status=206)
 
@@ -221,7 +230,7 @@ class ResetPassword(APIView):
             if user_data.activated == True:
                 if new1 == new2:
                     if pass_checker(old, password) == True:
-                        user_data.password = Hashpass(new1).decode()
+                        user_data.password = hashpass(new1).decode()
                         user_data.save()
                         response = {
                             "status": "success",

@@ -18,7 +18,6 @@ EMAIL_BODY = {
 }
 REDIRECT_LINK = {
     "Activation": "http://127.0.0.1:8000/",
-    "PasswordReset": "http://127.0.0.1:8000/",
 }
 EMAIL_LINK = {
     "Activation": "http://127.0.0.1:8000/user/register/verify/code={code:s}/",

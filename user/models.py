@@ -16,8 +16,8 @@ class User(models.Model):
     mastercv = models.URLField(max_length=300, unique=True)
     resume1 = models.URLField(max_length=300, unique=True)
     resume2 = models.URLField(max_length=300, unique=True, null=True, blank=True)
-    email = models.CharField(max_length=100, unique=True, default="")
-    password = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=20, null=True, blank=True)
     activated = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=70, blank=True, null=True)
 
