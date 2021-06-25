@@ -30,6 +30,7 @@ from django.core.mail import send_mail
 import bcrypt
 
 
+
 class UserPlacementsView(APIView):
     def get(self, request):
         user = IsLoggedIn(request)
@@ -47,7 +48,8 @@ class UserPlacementsView(APIView):
                 eligible_placements = Placement.objects.filter(
                     id__in=eligible_placement_ids
                 )
-                serializer = PlacementSerializer(eligible_placements, many=True)
+                serializer = PlacementSerializer(
+                    eligible_placements, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -69,7 +71,8 @@ class UserInternsView(APIView):
                         and user.batch in intern.eligible_batches
                     ):
                         eligible_intern_ids.append(intern.id)
-                eligible_interns = Intern.objects.filter(id__in=eligible_intern_ids)
+                eligible_interns = Intern.objects.filter(
+                    id__in=eligible_intern_ids)
                 serializer = InternSerializer(eligible_interns, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except:

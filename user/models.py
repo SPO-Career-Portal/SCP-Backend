@@ -3,6 +3,8 @@ import string
 import random
 import secrets
 
+from placement.models import Placement
+from intern.models import Intern
 # Create your models here.
 class User(models.Model):
     name = models.CharField(max_length=120)
@@ -17,10 +19,12 @@ class User(models.Model):
     resume1 = models.URLField(max_length=300, unique=True)
     resume2 = models.URLField(max_length=300, unique=True, null=True, blank=True)
     email = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=20, null=True, blank=True)
-    activated = models.BooleanField(default=False)
+    password = models.CharField(max_length=20, null=True, blank=True, editable=False)
+    activated = models.BooleanField(editable=False, default=False)
+    placements_applied_for = models.ManyToManyField( Placement, editable=False, blank=True )
+    interns_applied_for = models.ManyToManyField(Intern, editable=False, blank=True)
     verification_code = models.CharField(max_length=70, blank=True, null=True)
-
+    
     def generate_verification_code(self):
         gen_code = "".join(
             secrets.choice(string.ascii_uppercase + string.digits) for i in range(28)
@@ -28,6 +32,7 @@ class User(models.Model):
         self.verification_code = gen_code
         self.save()
         return self.verification_code
-
+    
+    
     def __str__(self):
         return self.name
