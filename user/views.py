@@ -1,4 +1,4 @@
-from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn
+from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn, linkValidator
 from django.contrib.auth import login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,7 +18,6 @@ from intern.models import Intern
 from intern.serializers import InternSerializer
 
 
-
 class UserPlacementsView(APIView):
     def get(self, request):
         user = IsLoggedIn(request)
@@ -36,8 +35,7 @@ class UserPlacementsView(APIView):
                 eligible_placements = Placement.objects.filter(
                     id__in=eligible_placement_ids
                 )
-                serializer = PlacementSerializer(
-                    eligible_placements, many=True)
+                serializer = PlacementSerializer(eligible_placements, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -59,8 +57,7 @@ class UserInternsView(APIView):
                         and user.batch in intern.eligible_batches
                     ):
                         eligible_intern_ids.append(intern.id)
-                eligible_interns = Intern.objects.filter(
-                    id__in=eligible_intern_ids)
+                eligible_interns = Intern.objects.filter(id__in=eligible_intern_ids)
                 serializer = InternSerializer(eligible_interns, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except:
@@ -114,3 +111,39 @@ class Logout(APIView):
             del request.session["username"]
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class Edit(APIView):
+    def post(self, request):
+        user = IsLoggedIn(request)
+        if user is not None:
+            try:
+                response = {"message": "Invalid URL"}
+                if linkValidator(request.data["github"]):
+                    user.github = request.data["github"]
+                else:
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if linkValidator(request.data["linkedin"]):
+                    user.linkedin = request.data["linkedin"]
+                else:
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if linkValidator(request.data["mastercv"]):
+                    user.mastercv = request.data["mastercv"]
+                else:
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if linkValidator(request.data["resume1"]):
+                    user.resume1 = request.data["resume1"]
+                else:
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                if "resume2" in request.data:
+                    if linkValidator(request.data["resume2"]):
+                        user.resume2 = request.data["resume2"]
+                    else:
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                user.save()
+                response = {"message": "User registered successfully"}
+                return Response(response, status=status.HTTP_200_OK)
+            except:
+                return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
