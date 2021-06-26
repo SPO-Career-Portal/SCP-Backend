@@ -118,31 +118,35 @@ class Edit(APIView):
         user = IsLoggedIn(request)
         if user is not None:
             try:
-                response = {"message": "Invalid URL"}
-                if linkValidator(request.data["github"]):
-                    user.github = request.data["github"]
-                else:
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                if linkValidator(request.data["linkedin"]):
-                    user.linkedin = request.data["linkedin"]
-                else:
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                if linkValidator(request.data["mastercv"]):
-                    user.mastercv = request.data["mastercv"]
-                else:
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                if linkValidator(request.data["resume1"]):
-                    user.resume1 = request.data["resume1"]
-                else:
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response1 = {"message": "Invalid URL"}
+                if "github" in request.data:
+                    if linkValidator(request.data["github"]):
+                        user.github = request.data["github"]
+                    else:
+                        return Response(response1, status=status.HTTP_400_BAD_REQUEST)
+                if "linkedin" in request.data:
+                    if linkValidator(request.data["linkedin"]):
+                        user.linkedin = request.data["linkedin"]
+                    else:
+                        return Response(response1, status=status.HTTP_400_BAD_REQUEST)
+                if "mastercv" in request.data:
+                    if linkValidator(request.data["mastercv"]):
+                        user.mastercv = request.data["mastercv"]
+                    else:
+                        return Response(response1, status=status.HTTP_400_BAD_REQUEST)
+                if "resume1" in request.data:
+                    if linkValidator(request.data["resume1"]):
+                        user.resume1 = request.data["resume1"]
+                    else:
+                        return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "resume2" in request.data:
                     if linkValidator(request.data["resume2"]):
                         user.resume2 = request.data["resume2"]
                     else:
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                        return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 user.save()
-                response = {"message": "User registered successfully"}
-                return Response(response, status=status.HTTP_200_OK)
+                response2 = {"message": "User registered successfully"}
+                return Response(response2, status=status.HTTP_200_OK)
             except:
                 return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
         else:
