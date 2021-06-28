@@ -11,4 +11,12 @@ urlpatterns = [
     path("interns/", UserInternsView.as_view(), name="user_interns"),
     path("auth/login/", Login.as_view(), name="auth-login"),
     path("auth/logout/", Logout.as_view(), name="auth-logout"),
+    path("register/", RegisterationView.as_view(), name="registeration"),
+    path(
+        "register/verify/code=<str:token>/",
+        SetPasswordAndActivate.as_view(),
+        name="email-activator",
+    ),
+    path("resetpassemail/", ResetPasswordEmail.as_view(), name="resetpass-email"),
+    path("resetpass/code=<str:token>/", ResetPassword.as_view(), name="resetpass"),
 ]
