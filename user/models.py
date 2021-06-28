@@ -22,10 +22,14 @@ class User(models.Model):
     email = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=20, null=True, blank=True, editable=False)
     activated = models.BooleanField(editable=False, default=False)
-    placements_applied_for = models.ManyToManyField( Placement, editable=False, blank=True )
+    placements_applied_for = models.ManyToManyField(
+        Placement, editable=False, blank=True
+    )
     interns_applied_for = models.ManyToManyField(Intern, editable=False, blank=True)
-    verification_code = models.CharField(max_length=70, blank=True, null=True)
-    
+    verification_code = models.CharField(
+        max_length=70, blank=True, null=True, editable=False
+    )
+
     def generate_verification_code(self):
         gen_code = "".join(
             secrets.choice(string.ascii_uppercase + string.digits) for i in range(28)
@@ -33,7 +37,6 @@ class User(models.Model):
         self.verification_code = gen_code
         self.save()
         return self.verification_code
-    
-    
+
     def __str__(self):
         return self.name

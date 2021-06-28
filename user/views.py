@@ -1,5 +1,11 @@
 from rest_framework import parsers
-from .utils import MAKE_PASSWORD, CHECK_PASSWORD, IsLoggedIn, IsRegistered, linkValidator
+from .utils import (
+    MAKE_PASSWORD,
+    CHECK_PASSWORD,
+    IsLoggedIn,
+    IsRegistered,
+    linkValidator,
+)
 from django.contrib.auth import login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -124,6 +130,7 @@ class Logout(APIView):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+
 class Edit(APIView):
     def post(self, request):
         user = IsLoggedIn(request)
@@ -131,27 +138,27 @@ class Edit(APIView):
             try:
                 response1 = {"message": "Invalid URL"}
                 if "github" in request.data:
-                    if linkValidator(request.data["github"]):
+                    if linkValidator(request.data["github"], "github.com"):
                         user.github = request.data["github"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "linkedin" in request.data:
-                    if linkValidator(request.data["linkedin"]):
+                    if linkValidator(request.data["linkedin"], "linkedin.com"):
                         user.linkedin = request.data["linkedin"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "mastercv" in request.data:
-                    if linkValidator(request.data["mastercv"]):
+                    if linkValidator(request.data["mastercv"], "google.com"):
                         user.mastercv = request.data["mastercv"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "resume1" in request.data:
-                    if linkValidator(request.data["resume1"]):
+                    if linkValidator(request.data["resume1"], "google.com"):
                         user.resume1 = request.data["resume1"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "resume2" in request.data:
-                    if linkValidator(request.data["resume2"]):
+                    if linkValidator(request.data["resume2"], "google.com"):
                         user.resume2 = request.data["resume2"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
@@ -162,7 +169,8 @@ class Edit(APIView):
                 return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-          
+
+
 def ActivationMailer(request):
     if request.method == "POST":
         try:

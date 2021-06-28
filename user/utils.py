@@ -15,10 +15,13 @@ def CHECK_PASSWORD(password, hash):
     return bcrypt.checkpw(password.encode(), hash.encode())
 
 
-def linkValidator(link):
-    regex = "^[https://]"
+def linkValidator(link, domain):
+    regex = "^https://"
     if not re.search(regex, link):
         link = "https://" + link
+    regex2 = domain + "/"
+    if regex2 not in link:
+        return False
     is_valid = validators.url(link)
     return is_valid
 
