@@ -75,7 +75,7 @@ Note : User needs to be logged in to use this API.
 
 #### Login
 ```
-url : /users/auth/login/
+url : /user/auth/login/
 method : POST
 parameters = {
     "username" : "<username>",
@@ -88,7 +88,7 @@ Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
 ```
 #### Logout
 ```
-url : /users/auth/logout/
+url : /user/auth/logout/
 method : POST
 parameters = {}
 ```
@@ -96,6 +96,69 @@ parameters = {}
 Successful : 200_OK
 Unsuccessful : 401_UNAUTHORIZED
 ```
+
+#### Registeration
+```
+url : /user/register/
+method : POST
+parameters = {
+         "roll" : "<roll>"
+          }
+```
+```
+Successful : 202_ACCEPTED
+Unsuccessful : 403_FORBIDDEN / 400_BAD_REQUEST
+```
+#### Activation Mail
+```
+Method : POST
+Parameters = {
+           "roll" = <"roll">
+           }
+```
+```
+Successful : Send_mail
+Unsuccessful : 206_PARTIAL_CONTENT / 400_BAD_REQUEST
+```
+#### Set Password And activate
+```
+url : /user/register/verify/code=<str:token>/
+Method : POST
+Parameters = {
+          "password" : <"password">
+           }
+```
+```
+Successful : 200_OK
+Unsuccessful : 401_UNAUTHORIZED
+```
+#### Reset Password Email
+```
+url : /user/resetpassemail/
+Method : POST
+Parameters = {
+           "roll" : <"roll">
+           }
+```
+```
+successful : send_mail
+Unsuccessful : 206_partial_content
+```
+#### Reset Password
+```
+url : /user/resetpass/code=<str:token>/
+Method: POST
+Parameters = {
+            new1 : <"new_password_1">
+            new2 : <"new_password_2">
+            old  : <"old_password">
+            verification code : <"token">
+```
+```
+Successful : 200_OK
+Unsuccessful : 401_UNAUTHORIZED
+``` 
+=======
 #### Intern Registration
 ```
 url: /intern/register/

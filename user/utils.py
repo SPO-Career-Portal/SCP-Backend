@@ -32,3 +32,11 @@ def IsLoggedIn(request):
             return None
     else:
         return None
+
+
+def IsRegistered(request):
+    try:
+        data = User.objects.get(roll=request.session["roll"])
+        return data.activated
+    except:
+        return None
