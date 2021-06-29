@@ -185,3 +185,20 @@ Response : {
            }
 Unsuccessful : 401_UNAUTHORIZED
 ```
+#### Editing User Profile
+```
+url: /user/edit/
+method: post
+parameters:{
+                "github",
+                "linkedin",
+                "mastercv",
+                "resume1",
+                "resume2"<optional>
+           }
+
+Successful: 200_OK
+Response:{
+            "message"
+         }
+Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED

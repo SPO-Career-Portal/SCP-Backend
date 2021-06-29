@@ -11,14 +11,14 @@ from placement.models import Placement
 
 # Create your views here.
 
+
 class Register(APIView):
     def post(self, request):
 
         user = IsLoggedIn(request)
         if user is not None:
             try:
-                placement_applied = Placement.objects.get(
-                    key=request.data['token'])
+                placement_applied = Placement.objects.get(key=request.data["token"])
                 if (
                     user.program in placement_applied.eligible_programmes
                     and user.department in placement_applied.eligible_branches

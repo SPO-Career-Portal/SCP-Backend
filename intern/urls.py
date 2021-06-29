@@ -7,5 +7,4 @@ from .views import *
 
 urlpatterns = [
     path("register/", Register.as_view(), name="view_register"),
-   
 ]

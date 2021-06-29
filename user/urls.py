@@ -11,6 +11,7 @@ urlpatterns = [
     path("interns/", UserInternsView.as_view(), name="user_interns"),
     path("auth/login/", Login.as_view(), name="auth-login"),
     path("auth/logout/", Logout.as_view(), name="auth-logout"),
+    path("edit/", Edit.as_view(), name="edit-user-profile"),
     path("register/", RegisterationView.as_view(), name="registeration"),
     path(
         "register/verify/code=<str:token>/",
