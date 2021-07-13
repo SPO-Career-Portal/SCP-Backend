@@ -34,6 +34,8 @@ from intern.models import Intern
 from intern.serializers import InternSerializer
 from django.core.mail import send_mail
 import bcrypt
+import regex as re
+import requests
 
 
 class UserPlacementsView(APIView):
@@ -312,3 +314,43 @@ class ResetPassword(APIView):
                 "message": "Invalid token or invalid request",
             }
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class Populate(APIView):
+    def post(self, request):
+        r = requests.get("https://search.pclub.in/api/students")
+        students = r.json()
+        try:
+            for student in students:
+                cnt = student["i"]
+                for key in student:
+                    if student[key] == "":
+                        student[key] = str(cnt)
+                regex = "^[Y]"
+                if re.search(regex, student["i"]):
+                    batch = student["i"][:2]
+                else:
+                    batch = "Y" + student["i"][:2]
+                try:
+                    q = User.objects.get(username=student["u"])
+                    q.name = student["n"]
+                    q.username = student["u"]
+                    q.roll = student["i"]
+                    q.batch = batch
+                    q.program = student["p"]
+                    q.department = student["d"]
+                    q.email = student["u"] + "@iitk.ac.in"
+                except:
+                    q = User(
+                        name=student["n"],
+                        username=student["u"],
+                        roll=student["i"],
+                        batch=batch,
+                        program=student["p"],
+                        department=student["d"],
+                        email=student["u"] + "@iitk.ac.in",
+                    )
+                q.save()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
