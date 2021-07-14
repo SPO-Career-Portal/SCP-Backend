@@ -20,5 +20,4 @@ urlpatterns = [
     ),
     path("resetpassemail/", ResetPasswordEmail.as_view(), name="resetpass-email"),
     path("resetpass/code=<str:token>/", ResetPassword.as_view(), name="resetpass"),
-    path("populate/", Populate.as_view(), name="populate-database"),
 ]
