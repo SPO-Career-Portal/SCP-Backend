@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import parsers
 from .utils import (
     MAKE_PASSWORD,
@@ -34,7 +35,7 @@ from intern.models import Intern
 from intern.serializers import InternSerializer
 from django.core.mail import send_mail
 import bcrypt
-
+import csv
 
 class UserPlacementsView(APIView):
     def get(self, request):
@@ -312,3 +313,32 @@ class ResetPassword(APIView):
                 "message": "Invalid token or invalid request",
             }
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+def export_csv(request):
+    response=HttpResponse(content_type='text/csv')
+    response['Content-Disposition']='attachment; filename=Expenses' + str(datetime.datetime.now())+'.csv'
+
+    writer=csv.writer(response)
+    writer.writerow(["name",
+            "username",
+            "roll",
+            "batch",
+            "program",
+            "department",
+            "github",
+            "linkedin",
+            "resume",])
+
+    users=User.objects.filter(interns_applied_for=request.user.interns_applied_for)
+    for user in users:
+        writer.writerow(user.name,
+        user.username,
+        user.roll,
+        user.batch,
+        user.program,
+        user.department,
+        user.github,
+        user.linkedin,
+        user.resume)
+        
+
+    return response

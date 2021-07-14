@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import routers, urlpatterns
+from rest_framework import routers, urlpatterns, views
 from .views import *
 
 
@@ -20,4 +20,5 @@ urlpatterns = [
     ),
     path("resetpassemail/", ResetPasswordEmail.as_view(), name="resetpass-email"),
     path("resetpass/code=<str:token>/", ResetPassword.as_view(), name="resetpass"),
+    path("export_csv", export_csv, name="export-csv"),
 ]
