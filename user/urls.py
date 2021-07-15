@@ -20,5 +20,5 @@ urlpatterns = [
     ),
     path("resetpassemail/", ResetPasswordEmail.as_view(), name="resetpass-email"),
     path("resetpass/code=<str:token>/", ResetPassword.as_view(), name="resetpass"),
-    path("export_csv", export_csv, name="export-csv"),
+    # path("export_csv", export_csv, name="export-csv"),
 ]

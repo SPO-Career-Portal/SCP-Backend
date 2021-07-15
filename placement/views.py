@@ -38,3 +38,23 @@ class Register(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+class CreatePlacementView(APIView):
+    
+    def post(self, request):
+        try:
+            user = IsLoggedIn(request)
+            if user is None:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            placement_name = request.data.get("placement_name", "")
+            company=request.data.get("company", "")
+            deadline=request.data.get("deadline", "")
+            role=request.data.get("role", "")
+            description=request.data.get("decription", "")
+           
+            Placement.objects.create(placement_name=placement_name, company=company, duration=deadline,role=role,description=description)
+            return Response(status=status.HTTP_201_CREATED)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

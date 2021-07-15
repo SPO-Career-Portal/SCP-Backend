@@ -172,6 +172,18 @@ Response : {
            }
 Unsuccessful : 401_UNAUTHORIZED
 ```
+#### Intern PUT
+
+HTTP 405 Method Not Allowed
+Allow: POST, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "detail": "Method \"GET\" not allowed."
+}
+
+
 #### Placement Registration
 ```
 url: /placement/register/

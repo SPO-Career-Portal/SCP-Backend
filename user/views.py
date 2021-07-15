@@ -313,32 +313,32 @@ class ResetPassword(APIView):
                 "message": "Invalid token or invalid request",
             }
             return Response(response, status=status.HTTP_401_UNAUTHORIZED)
-def export_csv(request):
-    response=HttpResponse(content_type='text/csv')
-    response['Content-Disposition']='attachment; filename=Expenses' + str(datetime.datetime.now())+'.csv'
+# def export_csv(request):
+#     response=HttpResponse(content_type='text/csv')
+#     response['Content-Disposition']='attachment; filename=Expenses' + str(datetime.datetime.now())+'.csv'
 
-    writer=csv.writer(response)
-    writer.writerow(["name",
-            "username",
-            "roll",
-            "batch",
-            "program",
-            "department",
-            "github",
-            "linkedin",
-            "resume",])
+#     writer=csv.writer(response)
+#     writer.writerow(["name",
+#             "username",
+#             "roll",
+#             "batch",
+#             "program",
+#             "department",
+#             "github",
+#             "linkedin",
+#             "resume",])
 
-    users=User.objects.filter(interns_applied_for=request.user.interns_applied_for)
-    for user in users:
-        writer.writerow(user.name,
-        user.username,
-        user.roll,
-        user.batch,
-        user.program,
-        user.department,
-        user.github,
-        user.linkedin,
-        user.resume)
+#     users=User.objects.filter(interns_applied_for=request.user.interns_applied_for)
+#     for user in users:
+#         writer.writerow(user.name,
+#         user.username,
+#         user.roll,
+#         user.batch,
+#         user.program,
+#         user.department,
+#         user.github,
+#         user.linkedin,
+#         user.mastercv)
         
 
-    return response
+#     return response

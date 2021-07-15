@@ -7,4 +7,5 @@ from .views import *
 
 urlpatterns = [
     path("register/", Register.as_view(), name="register-user"),
+    path('create/', CreatePlacementView.as_view(), name="create-placement"),
 ]
