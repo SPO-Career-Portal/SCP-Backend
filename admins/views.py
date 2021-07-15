@@ -52,8 +52,8 @@ class InternList(APIView):
         if IsLoggedIn(request) is not None:
             try:
                 internships = Intern.objects.all()
-                response = InternSerializer(internships, many=True)
-                return Response(response, status=status.HTTP_200_OK)
+                serializer = InternSerializer(internships, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -65,8 +65,8 @@ class PlacementList(APIView):
         if IsLoggedIn(request) is not None:
             try:
                 placements = Placement.objects.all()
-                response = PlacementSerializer(placements, many=True)
-                return Response(response, status=status.HTTP_200_OK)
+                serializer = PlacementSerializer(placements, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -86,14 +86,14 @@ class AddInternship(APIView):
                     eligible_batches=request.data["eligible_batches"],
                     eligible_branches=request.data["eligible_branches"],
                     eligible_programmes=request.data["eligible_programmes"],
-                    deadline=request.data["deadLine"],
+                    deadline=request.data["deadline"],
                     intern_start_month=request.data["intern_start_month"],
                     intern_end_month=request.data["intern_end_month"],
                 )
                 intern.save()
                 return Response(status=status.HTTP_200_OK)
             except:
-                response = {"message": "Incomplete Information"}
+                response = {"message": "Invalid Information"}
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -111,12 +111,12 @@ class AddPlacement(APIView):
                     eligible_batches=request.data["eligible_batches"],
                     eligible_branches=request.data["eligible_branches"],
                     eligible_programmes=request.data["eligible_programmes"],
-                    deadline=request.data["deadLine"],
+                    deadline=request.data["deadline"],
                 )
                 placement.save()
                 return Response(status=status.HTTP_200_OK)
             except:
-                response = {"message": "Incomplete Information"}
+                response = {"message": "Invalid Information"}
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -155,8 +155,10 @@ class DeletePlacement(APIView):
 def exportInternData(request):
     response = HttpResponse(content_type="text/csv")
     key = request.data["key"]
-    intern_name = Intern.objects.get(key=key)
-    response["Content-Disposition"] = 'attachment; filename=intern_name+".csv"'
+    intern = Intern.objects.get(key=key)
+    response["Content-Disposition"] = (
+        "attachment; filename=" + intern.intern_name + ".csv"
+    )
 
     writer = csv.writer(response)
     writer.writerow(
@@ -176,15 +178,17 @@ def exportInternData(request):
     users = User.objects.filter(interns_applied_for=Intern.objects.get(key=key))
     for user in users:
         writer.writerow(
-            user.name,
-            user.username,
-            user.roll,
-            user.batch,
-            user.program,
-            user.department,
-            user.github,
-            user.linkedin,
-            user.mastercv,
+            [
+                user.name,
+                user.username,
+                user.roll,
+                user.batch,
+                user.program,
+                user.department,
+                user.github,
+                user.linkedin,
+                user.mastercv,
+            ]
         )
 
     return response
@@ -193,8 +197,10 @@ def exportInternData(request):
 def exportPlacementData(request):
     response = HttpResponse(content_type="text/csv")
     key = request.data["key"]
-    placement_name = Placement.objects.get(key=key)
-    response["Content-Disposition"] = 'attachment; filename=placement_name+".csv"'
+    placement = Placement.objects.get(key=key)
+    response["Content-Disposition"] = (
+        "attachment; filename=" + placement.placement_name + ".csv"
+    )
 
     writer = csv.writer(response)
     writer.writerow(
@@ -214,15 +220,17 @@ def exportPlacementData(request):
     users = User.objects.filter(placements_applied_for=Placement.objects.get(key=key))
     for user in users:
         writer.writerow(
-            user.name,
-            user.username,
-            user.roll,
-            user.batch,
-            user.program,
-            user.department,
-            user.github,
-            user.linkedin,
-            user.mastercv,
+            [
+                user.name,
+                user.username,
+                user.roll,
+                user.batch,
+                user.program,
+                user.department,
+                user.github,
+                user.linkedin,
+                user.mastercv,
+            ]
         )
 
     return response
