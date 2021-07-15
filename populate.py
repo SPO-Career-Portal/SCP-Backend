@@ -4,7 +4,7 @@ from user.models import User
 
 
 class Populate:
-    def populate():
+    def populate(batches):
         r = requests.get("https://search.pclub.in/api/students")
         students = r.json()
         try:
@@ -18,6 +18,8 @@ class Populate:
                     batch = student["i"][:2]
                 else:
                     batch = "Y" + student["i"][:2]
+                if batch not in batches:
+                    continue
                 try:
                     q = User.objects.get(username=student["u"])
                     q.name = student["n"]
