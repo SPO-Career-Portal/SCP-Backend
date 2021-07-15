@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "placement.apps.PlacementConfig",
     "intern.apps.InternConfig",
     "user.apps.UserConfig",
+    "admins.apps.AdminsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
