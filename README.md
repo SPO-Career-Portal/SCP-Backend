@@ -164,7 +164,8 @@ Unsuccessful : 401_UNAUTHORIZED
 url: /intern/register/
 method: POST 
 parameters:{
-                "token"
+                "key",
+                "resume"<resume1/resume2>
             }    
 Successful : 200_OK
 Response : {
@@ -177,7 +178,8 @@ Unsuccessful : 401_UNAUTHORIZED
 url: /placement/register/
 method: POST
 parameters:{
-                "token"
+                "key",
+                "resume"<resume1/resume2>
             }    
 Successful : 200_OK
 Response : {
@@ -194,7 +196,7 @@ parameters:{
                 "linkedin",
                 "mastercv",
                 "resume1",
-                "resume2"<optional>
+                "resume2",
            }
 
 Successful: 200_OK

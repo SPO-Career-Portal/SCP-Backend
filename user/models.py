@@ -2,6 +2,7 @@ from django.db import models
 import string
 import random
 import secrets
+from django.utils import timezone
 
 from placement.models import Placement
 from intern.models import Intern
@@ -14,28 +15,20 @@ class User(models.Model):
     batch = models.CharField(max_length=20)
     program = models.CharField(max_length=20)
     department = models.CharField(max_length=50)
-    github = models.URLField(
-        max_length=300, unique=True, default=None, blank=True, null=True
-    )
-    linkedin = models.URLField(
-        max_length=300, unique=True, default=None, blank=True, null=True
-    )
-    mastercv = models.URLField(
-        max_length=300, unique=True, default=None, blank=True, null=True
-    )
-    resume1 = models.URLField(
-        max_length=300, unique=True, default=None, blank=True, null=True
-    )
-    resume2 = models.URLField(
-        max_length=300, unique=True, default=None, blank=True, null=True
-    )
+    github = models.URLField(max_length=300, unique=True, blank=True, null=True)
+    linkedin = models.URLField(max_length=300, unique=True, blank=True, null=True)
+    mastercv = models.URLField(max_length=300, unique=True, blank=True, null=True)
+    resume1 = models.URLField(max_length=300, unique=True, blank=True, null=True)
+    resume2 = models.URLField(max_length=300, unique=True, blank=True, null=True)
     email = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=20, null=True, blank=True, editable=False)
     activated = models.BooleanField(editable=False, default=False)
     placements_applied_for = models.ManyToManyField(
-        Placement, editable=False, blank=True
+        Placement, editable=False, blank=True, through="PlacementResume"
     )
-    interns_applied_for = models.ManyToManyField(Intern, editable=False, blank=True)
+    interns_applied_for = models.ManyToManyField(
+        Intern, editable=False, blank=True, through="InternResume"
+    )
     verification_code = models.CharField(
         max_length=70, blank=True, null=True, editable=False
     )
@@ -50,3 +43,26 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PlacementResume(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    placement = models.ForeignKey(Placement, on_delete=models.CASCADE, editable=False)
+    resume = models.URLField(max_length=300, blank=False, editable=False)
+    registered_at = models.DateTimeField(null=True)
+
+    def save(self, *args, **kwargs):
+        self.registered_at = timezone.now()
+        super(PlacementResume, self).save(*args, **kwargs)
+
+
+class InternResume(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    intern = models.ForeignKey(Intern, on_delete=models.CASCADE, editable=False)
+    resume = models.URLField(max_length=300, blank=False, editable=False)
+    registered_at = models.DateTimeField(null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.registered_at:
+            self.registered_at = timezone.now()
+        super(InternResume, self).save(*args, **kwargs)
