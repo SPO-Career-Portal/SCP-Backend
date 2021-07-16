@@ -11,6 +11,6 @@ urlpatterns = [
     path("deletePlacement/", DeletePlacement.as_view(), name="Delete_Placement"),
     path("login/", Login.as_view(), name="Login"),
     path("logout/", Logout.as_view(), name="Logout"),
-    path("downloadIntern/", exportInternData, name="Download_Intern_Data"),
-    path("downloadPlacement/", exportPlacementData, name="Download_Placement_Data"),
+    path("downloadIntern/<str:key>/", exportInternData, name="Download_Intern_Data"),
+    path("downloadPlacement/<str:key>/", exportPlacementData, name="Download_Placement_Data"),
 ]

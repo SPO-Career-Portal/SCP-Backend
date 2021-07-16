@@ -1,17 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators import csrf
+from rest_framework.decorators import api_view
 from .models import Admin
 from rest_framework.views import APIView
 from .utils import IsLoggedIn
 from intern.models import Intern
 from placement.models import Placement
-from user.models import User
+from user.models import User, InternResume, PlacementResume
 from intern.serializers import InternSerializer
 from placement.serializers import PlacementSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from user.utils import CHECK_PASSWORD
 import csv
+from django.views.decorators.csrf import csrf_exempt
 
 
 class Login(APIView):
@@ -152,88 +155,99 @@ class DeletePlacement(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-def exportInternData(request):
-    response = HttpResponse(content_type="text/csv")
-    key = request.data["key"]
-    intern = Intern.objects.get(key=key)
-    response["Content-Disposition"] = (
-        "attachment; filename=" + intern.intern_name + ".csv"
-    )
+def exportInternData(request, key):
+    try:
+        response = HttpResponse(content_type="text/csv")
+        intern = Intern.objects.get(key=key)
+        response["Content-Disposition"] = (
+            "attachment; filename=" + intern.intern_name + ".csv"
+        )
 
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "Name",
-            "Username",
-            "Roll",
-            "Batch",
-            "Program",
-            "Department",
-            "Github",
-            "Linkedin",
-            "Resume",
-        ]
-    )
-
-    users = User.objects.filter(interns_applied_for=Intern.objects.get(key=key))
-    for user in users:
+        writer = csv.writer(response)
         writer.writerow(
             [
-                user.name,
-                user.username,
-                user.roll,
-                user.batch,
-                user.program,
-                user.department,
-                user.github,
-                user.linkedin,
-                user.mastercv,
+                "Name",
+                "Username",
+                "Roll",
+                "Batch",
+                "Program",
+                "Department",
+                "Github",
+                "Linkedin",
+                "MasterCV",
+                "Resume"
             ]
         )
 
-    return response
+        users = User.objects.filter(interns_applied_for=intern)
+        for user in users:
+            intern_resume = InternResume.objects.filter(user=user, intern=intern)
+            writer.writerow(
+                [
+                    user.name,
+                    user.username,
+                    user.roll,
+                    user.batch,
+                    user.program,
+                    user.department,
+                    user.github,
+                    user.linkedin,
+                    user.mastercv,
+                    intern_resume[0].resume
+                ]
+            )
+
+        return response
+    except:
+        return HttpResponse("Page Not Found")
 
 
-def exportPlacementData(request):
-    response = HttpResponse(content_type="text/csv")
-    key = request.data["key"]
-    placement = Placement.objects.get(key=key)
-    response["Content-Disposition"] = (
-        "attachment; filename=" + placement.placement_name + ".csv"
-    )
 
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "Name",
-            "Username",
-            "Roll",
-            "Batch",
-            "Program",
-            "Department",
-            "Github",
-            "Linkedin",
-            "Resume",
-        ]
-    )
+def exportPlacementData(request, key):
+    try:
+        response = HttpResponse(content_type="text/csv")
+        placement = Placement.objects.get(key=key)
+        response["Content-Disposition"] = (
+            "attachment; filename=" + placement.placement_name + ".csv"
+        )
 
-    users = User.objects.filter(placements_applied_for=Placement.objects.get(key=key))
-    for user in users:
+        writer = csv.writer(response)
         writer.writerow(
             [
-                user.name,
-                user.username,
-                user.roll,
-                user.batch,
-                user.program,
-                user.department,
-                user.github,
-                user.linkedin,
-                user.mastercv,
+                "Name",
+                "Username",
+                "Roll",
+                "Batch",
+                "Program",
+                "Department",
+                "Github",
+                "Linkedin",
+                "MasterCV",
+                "Resume"
             ]
         )
 
-    return response
+        users = User.objects.filter(placements_applied_for=placement)
+        for user in users:
+            placement_resume = PlacementResume.objects.filter(user=user, placement=placement)
+            writer.writerow(
+                [
+                    user.name,
+                    user.username,
+                    user.roll,
+                    user.batch,
+                    user.program,
+                    user.department,
+                    user.github,
+                    user.linkedin,
+                    user.mastercv,
+                    placement_resume[0].resume
+                ]
+            )
+
+        return response
+    except:
+        return HttpResponse("Page Not Found")
 
 
 # Create your views here.
