@@ -164,26 +164,28 @@ Unsuccessful : 401_UNAUTHORIZED
 url: /intern/register/
 method: POST 
 parameters:{
-                "token"
+                "key",
+                "resume"<resume1/resume2>
             }    
 Successful : 200_OK
 Response : {
                 "message"
            }
-Unsuccessful : 401_UNAUTHORIZED
+Unsuccessful : 401_UNAUTHORIZED/400_BAD_REQUEST
 ```
 #### Placement Registration
 ```
 url: /placement/register/
 method: POST
 parameters:{
-                "token"
+                "key",
+                "resume"<resume1/resume2>
             }    
 Successful : 200_OK
 Response : {
                 "message"
            }
-Unsuccessful : 401_UNAUTHORIZED
+Unsuccessful : 401_UNAUTHORIZED/400_BAD_REQUEST
 ```
 #### Editing User Profile
 ```
@@ -194,7 +196,7 @@ parameters:{
                 "linkedin",
                 "mastercv",
                 "resume1",
-                "resume2"<optional>
+                "resume2",
            }
 
 Successful: 200_OK
