@@ -204,3 +204,157 @@ Response:{
             "message"
          }
 Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+
+### Admin
+
+
+#### Login
+```
+url : /admin/login/
+method : POST
+parameters = {
+    "username" : "<username>",
+    "password" : "<password>"
+    }
+```
+```
+Successful : 200_OK
+Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Logout
+```
+url : /admin/logout/
+method : POST
+parameters = {}
+```
+```
+Successful : 200_OK
+Unsuccessful : 401_UNAUTHORIZED
+```
+#### View Placements
+```
+url : /admin/placements/
+method : GET
+
+Successful : 200_OK
+Response : [
+                {
+                    "key",
+                    "placement_name", 
+                    "company", 
+                    "role", 
+                    "description", 
+                    "deadline"
+                },
+                ...
+           ]
+
+Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
+
+Note : Admin needs to be logged in to use this API.
+```
+#### View Interns
+```
+url : /admin/interns/
+method : GET
+
+Successful : 200_OK
+Response : [
+                {
+                    "key",
+                    "intern_name", 
+                    "company", 
+                    "duration", 
+                    "role", 
+                    "description", 
+                    "deadline", 
+                    "intern_start_month", 
+                    "intern_end_month"
+                },
+                ...
+           ]
+
+Unsuccessful : 400_BAD_REQUEST / 401_UNAUTHORIZED
+
+Note : Admin needs to be logged in to use this API.
+```
+#### Add Placements
+```
+url: /admin/addPlacement/
+method: POST
+
+Parameters: {
+                "placement_name", 
+                "company", 
+                "role", 
+                "description", 
+                "deadline",
+                "eligible_batches",
+                "eligible_branches",
+                "eligible_programmes"
+            }
+
+Successfull : 200_OK
+Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Add Interns
+```
+url: /admin/addIntern/
+method: POST
+
+Parameters: {
+                "intern_name", 
+                "company", 
+                "role", 
+                "description",
+                "duration", 
+                "deadline",
+                "eligible_batches",
+                "eligible_branches",
+                "eligible_programmes",
+                "intern_start_month",
+                "intern_end_month"
+            }
+
+Successfull : 200_OK
+Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Delete Placement
+```
+url: /admin/deletePlacement/
+method: DELETE
+
+Parameters: {
+                "key"
+            }
+
+Successfull : 200_OK
+Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Delete Internship
+```
+url: /admin/deleteIntern/
+method: DELETE
+
+Parameters: {
+                "key"
+            }
+
+Successful : 200_OK
+Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
+```
+#### Download Placement CSV
+```
+url: /admin/downloadPlacement/<str:key>/
+
+Successful: The respective CSV file in downloaded
+Unsuccessful: Page not found
+```
+#### Download Intern CSV
+```
+url: /admin/downloadIntern/<str:key>/
+
+Successful: The respective CSV file in downloaded
+Unsuccessful: Page not found
+```

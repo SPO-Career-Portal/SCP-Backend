@@ -166,7 +166,7 @@ class Edit(APIView):
                 response2 = {"message": "Profile edited successfully"}
                 return Response(response2, status=status.HTTP_200_OK)
             except:
-                return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
