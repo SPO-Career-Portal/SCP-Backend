@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from user.models import PlacementResume
 from rest_framework import status
 from placement.models import Placement
+from django.utils import timezone
 
 
 # Create your views here.
@@ -16,6 +17,11 @@ class Register(APIView):
         if user is not None:
             try:
                 placement_applied = Placement.objects.get(key=request.data["key"])
+                if placement_applied.deadline < timezone.now():
+                    response = {
+                        "message": "No more submissions are being accepted for this offer"
+                    }
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
                 if request.data["resume"].lower() == "resume1":
                     resume = user.resume1
                 elif request.data["resume"].lower() == "resume2":
@@ -32,10 +38,12 @@ class Register(APIView):
                             if PlacementResume.objects.filter(
                                 user=user, placement=placement_applied
                             ).exists():
-                                resume_relation = PlacementResume.objects.get(
-                                    user=user, placement=placement_applied
+                                response = {
+                                    "message": "You have already applied for this offer"
+                                }
+                                return Response(
+                                    response, status=status.HTTP_400_BAD_REQUEST
                                 )
-                                resume_relation.resume = resume
                             else:
                                 resume_relation = PlacementResume(
                                     user=user,

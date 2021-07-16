@@ -171,7 +171,7 @@ Successful : 200_OK
 Response : {
                 "message"
            }
-Unsuccessful : 401_UNAUTHORIZED
+Unsuccessful : 401_UNAUTHORIZED/400_BAD_REQUEST
 ```
 #### Placement Registration
 ```
@@ -185,7 +185,7 @@ Successful : 200_OK
 Response : {
                 "message"
            }
-Unsuccessful : 401_UNAUTHORIZED
+Unsuccessful : 401_UNAUTHORIZED/400_BAD_REQUEST
 ```
 #### Editing User Profile
 ```

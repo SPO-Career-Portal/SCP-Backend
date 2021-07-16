@@ -63,6 +63,5 @@ class InternResume(models.Model):
     registered_at = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
-        if not self.registered_at:
-            self.registered_at = timezone.now()
+        self.registered_at = timezone.now()
         super(InternResume, self).save(*args, **kwargs)
