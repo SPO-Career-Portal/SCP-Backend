@@ -1,13 +1,9 @@
 django
 djangorestframework
 django-filter
-hashlib
 django-extensions
 django-rest-auth
 bcrypt
-secrets
-random
-string
 regex
 requests
 validators
