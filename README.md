@@ -347,14 +347,20 @@ Unsuccessful: 400_BAD_REQUEST / 401_UNAUTHORIZED
 #### Download Placement CSV
 ```
 url: /admin/downloadPlacement/<str:key>/
+method: GET
 
-Successful: The respective CSV file in downloaded
-Unsuccessful: Page not found
+Response: Respective csv file gets downloaded
+
+Successful: 200_OK
+Unsuccessful: 401_UNAUTHORIZED / 400_BAD_REQUEST
 ```
 #### Download Intern CSV
 ```
 url: /admin/downloadIntern/<str:key>/
+method: GET
 
-Successful: The respective CSV file in downloaded
-Unsuccessful: Page not found
+Response: Respective csv file gets downloaded
+
+Successful: 200_OK
+Unsuccessful: 401_UNAUTHORIZED / 400_BAD_REQUEST
 ```
