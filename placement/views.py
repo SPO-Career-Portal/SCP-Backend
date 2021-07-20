@@ -5,6 +5,12 @@ from user.models import PlacementResume
 from rest_framework import status
 from placement.models import Placement
 from django.utils import timezone
+from src.settings_email import (
+    EMAIL_BODY,
+    EMAIL_HOST_USER,
+    EMAIL_SUBJECT,
+)
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -12,7 +18,6 @@ from django.utils import timezone
 
 class Register(APIView):
     def post(self, request):
-
         user = IsLoggedIn(request)
         if user is not None:
             try:
@@ -50,6 +55,19 @@ class Register(APIView):
                                     placement=placement_applied,
                                     resume=resume,
                                 )
+                            sender = EMAIL_HOST_USER
+                            recipient = user.email
+                            name = user.name
+                            subject = EMAIL_SUBJECT["PlacementConfirmation"]
+                            body = EMAIL_BODY["PlacementConfirmation"].format(
+                                name=name,
+                                placement_name=placement_applied.placement_name,
+                                role=placement_applied.role,
+                                company=placement_applied.company,
+                            )
+                            send_mail(
+                                subject, body, sender, [recipient], fail_silently=False
+                            )
                             resume_relation.save()
                             response = {
                                 "message": "You have successfully registered for this placement offer"

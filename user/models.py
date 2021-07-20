@@ -21,7 +21,7 @@ class User(models.Model):
     resume1 = models.URLField(max_length=300, unique=True, blank=True, null=True)
     resume2 = models.URLField(max_length=300, unique=True, blank=True, null=True)
     email = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=20, null=True, blank=True, editable=False)
+    password = models.CharField(max_length=100, null=True, blank=True, editable=False)
     activated = models.BooleanField(editable=False, default=False)
     placements_applied_for = models.ManyToManyField(
         Placement, editable=False, blank=True, through="PlacementResume"
