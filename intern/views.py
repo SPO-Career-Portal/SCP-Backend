@@ -5,6 +5,12 @@ from rest_framework import status
 from intern.models import Intern
 from user.models import InternResume
 from django.utils import timezone
+from src.settings_email import (
+    EMAIL_BODY,
+    EMAIL_HOST_USER,
+    EMAIL_SUBJECT,
+)
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -47,6 +53,19 @@ class Register(APIView):
                                 resume_relation = InternResume(
                                     user=user, intern=intern_applied, resume=resume
                                 )
+                            sender = EMAIL_HOST_USER
+                            recipient = user.email
+                            name = user.name
+                            subject = EMAIL_SUBJECT["InternConfirmation"]
+                            body = EMAIL_BODY["InternConfirmation"].format(
+                                name=name,
+                                intern_name=intern_applied.intern_name,
+                                role=intern_applied.role,
+                                company=intern_applied.company,
+                            )
+                            send_mail(
+                                subject, body, sender, [recipient], fail_silently=False
+                            )
                             resume_relation.save()
                             response = {
                                 "message": "You have successfully registered for this internship"
