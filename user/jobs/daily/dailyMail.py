@@ -10,6 +10,7 @@ from src.settings_email import (
 )
 from django.core.mail import send_mail
 
+
 class Job(DailyJob):
     help = "Daily Mailer"
 
@@ -25,20 +26,23 @@ class Job(DailyJob):
             email_body = """NAME\tCOMPANY\tROLE\tDEADLINE\n"""
             for placement in placements:
                 if (
-                        user.program in placement.eligible_programmes
-                        and user.department in placement.eligible_branches
-                        and user.batch in placement.eligible_batches
-                    ):
+                    user.program in placement.eligible_programmes
+                    and user.department in placement.eligible_branches
+                    and user.batch in placement.eligible_batches
+                ):
                     time_difference = placement.deadline - timezone.now()
-                    if time_difference.total_seconds() <= 86500:
+                    if (
+                        time_difference.total_seconds() <= 86500
+                        and time_difference.total_seconds() >= 0
+                    ):
                         if placement not in user.placements_applied_for.all():
-                            placement_data = f"""{placement.placement_name}\t{placement.company}\t{placement.role}\t{placement.deadline}\n"""
-                            email_body = email_body+placement_data
-                            count = count+1
+                            placement_data = f"""{placement.placement_name}\t{placement.company}\t{placement.role}\t{timezone.localtime(placement.deadline)}\n"""
+                            email_body = email_body + placement_data
+                            count = count + 1
             if count != 0:
                 sender = EMAIL_HOST_USER
                 recipient = user.email
-                name = user.name 
+                name = user.name
                 subject = EMAIL_SUBJECT["PlacementMailer"]
                 body = EMAIL_BODY["PlacementMailer"].format(name=name, body=email_body)
                 send_mail(subject, body, sender, [recipient], fail_silently=False)
@@ -51,20 +55,23 @@ class Job(DailyJob):
             email_body = """NAME\tCOMPANY\tROLE\tDEADLINE\n"""
             for intern in interns:
                 if (
-                        user.program in intern.eligible_programmes
-                        and user.department in intern.eligible_branches
-                        and user.batch in intern.eligible_batches
-                    ):
+                    user.program in intern.eligible_programmes
+                    and user.department in intern.eligible_branches
+                    and user.batch in intern.eligible_batches
+                ):
                     time_difference = intern.deadline - timezone.now()
-                    if time_difference.total_seconds() <= 86500:
-                        if intern in user.interns_applied_for.all():
-                            intern_data = f"""{intern.intern_name}\t{intern.company}\t{intern.role}\t{intern.deadline}\n"""
-                            email_body = email_body+intern_data
-                            count = count+1
+                    if (
+                        time_difference.total_seconds() <= 86500
+                        and time_difference.total_seconds() >= 0
+                    ):
+                        if intern not in user.interns_applied_for.all():
+                            intern_data = f"""{intern.intern_name}\t{intern.company}\t{intern.role}\t{timezone.localtime(intern.deadline)}\n"""
+                            email_body = email_body + intern_data
+                            count = count + 1
             if count != 0:
                 sender = EMAIL_HOST_USER
                 recipient = user.email
-                name = user.name 
+                name = user.name
                 subject = EMAIL_SUBJECT["InternMailer"]
                 body = EMAIL_BODY["InternMailer"].format(name=name, body=email_body)
                 send_mail(subject, body, sender, [recipient], fail_silently=False)
