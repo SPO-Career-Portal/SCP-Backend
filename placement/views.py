@@ -38,41 +38,40 @@ class Register(APIView):
                     and user.department in placement_applied.eligible_branches
                     and user.batch in placement_applied.eligible_batches
                 ):
-                    if user.github and user.linkedin and user.mastercv:
-                        if resume:
-                            if PlacementResume.objects.filter(
-                                user=user, placement=placement_applied
-                            ).exists():
-                                response = {
-                                    "message": "You have already applied for this offer"
-                                }
-                                return Response(
-                                    response, status=status.HTTP_400_BAD_REQUEST
-                                )
-                            else:
-                                resume_relation = PlacementResume(
-                                    user=user,
-                                    placement=placement_applied,
-                                    resume=resume,
-                                )
-                            sender = EMAIL_HOST_USER
-                            recipient = user.email
-                            name = user.name
-                            subject = EMAIL_SUBJECT["PlacementConfirmation"]
-                            body = EMAIL_BODY["PlacementConfirmation"].format(
-                                name=name,
-                                placement_name=placement_applied.placement_name,
-                                role=placement_applied.role,
-                                company=placement_applied.company,
-                            )
-                            send_mail(
-                                subject, body, sender, [recipient], fail_silently=False
-                            )
-                            resume_relation.save()
+                    if user.github and user.linkedin and user.mastercv and resume:
+                        if PlacementResume.objects.filter(
+                            user=user, placement=placement_applied
+                        ).exists():
                             response = {
-                                "message": "You have successfully registered for this placement offer"
+                                "message": "You have already applied for this offer"
                             }
-                            return Response(response, status=status.HTTP_200_OK)
+                            return Response(
+                                response, status=status.HTTP_400_BAD_REQUEST
+                            )
+                        else:
+                            resume_relation = PlacementResume(
+                                user=user,
+                                placement=placement_applied,
+                                resume=resume,
+                            )
+                        sender = EMAIL_HOST_USER
+                        recipient = user.email
+                        name = user.name
+                        subject = EMAIL_SUBJECT["PlacementConfirmation"]
+                        body = EMAIL_BODY["PlacementConfirmation"].format(
+                            name=name,
+                            placement_name=placement_applied.placement_name,
+                            role=placement_applied.role,
+                            company=placement_applied.company,
+                        )
+                        send_mail(
+                            subject, body, sender, [recipient], fail_silently=False
+                        )
+                        resume_relation.save()
+                        response = {
+                            "message": "You have successfully registered for this placement offer"
+                        }
+                        return Response(response, status=status.HTTP_200_OK)
                     response = {"message": "User profile update incomplete"}
                     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
                 else:
