@@ -8,7 +8,7 @@ class Intern(models.Model):
     company = models.CharField(max_length=500)
     duration = models.CharField(max_length=500)
     role = models.CharField(max_length=5000)
-    description = models.CharField(max_length=5000)
+    description = models.TextField()
     eligible_batches = models.JSONField(default=list)
     eligible_branches = models.JSONField(default=list)
     eligible_programmes = models.JSONField(default=list)
