@@ -9,10 +9,7 @@ class InternSerializer(serializers.ModelSerializer):
             "key",
             "intern_name",
             "company",
-            "duration",
             "role",
             "description",
             "deadline",
-            "intern_start_month",
-            "intern_end_month",
         )
