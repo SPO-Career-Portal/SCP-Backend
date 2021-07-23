@@ -25,20 +25,18 @@ class Job(DailyJob):
             placements = Placement.objects.all()
             email_body = """NAME\tCOMPANY\tROLE\tDEADLINE\n"""
             for placement in placements:
+                time_difference = placement.deadline - timezone.now()
                 if (
                     user.program in placement.eligible_programmes
                     and user.department in placement.eligible_branches
                     and user.batch in placement.eligible_batches
+                    and time_difference.total_seconds() <= 86500
+                    and time_difference.total_seconds() >= 0
+                    and placement not in user.placements_applied_for.all()
                 ):
-                    time_difference = placement.deadline - timezone.now()
-                    if (
-                        time_difference.total_seconds() <= 86500
-                        and time_difference.total_seconds() >= 0
-                    ):
-                        if placement not in user.placements_applied_for.all():
-                            placement_data = f"""{placement.placement_name}\t{placement.company}\t{placement.role}\t{timezone.localtime(placement.deadline)}\n"""
-                            email_body = email_body + placement_data
-                            count = count + 1
+                    placement_data = f"""{placement.placement_name}\t{placement.company}\t{placement.role}\t{timezone.localtime(placement.deadline)}\n"""
+                    email_body = email_body + placement_data
+                    count = count + 1
             if count != 0:
                 sender = EMAIL_HOST_USER
                 recipient = user.email
@@ -54,20 +52,18 @@ class Job(DailyJob):
             interns = Intern.objects.all()
             email_body = """NAME\tCOMPANY\tROLE\tDEADLINE\n"""
             for intern in interns:
+                time_difference = intern.deadline - timezone.now()
                 if (
                     user.program in intern.eligible_programmes
                     and user.department in intern.eligible_branches
                     and user.batch in intern.eligible_batches
+                    and time_difference.total_seconds() <= 86500
+                    and time_difference.total_seconds() >= 0
+                    and intern not in user.interns_applied_for.all()
                 ):
-                    time_difference = intern.deadline - timezone.now()
-                    if (
-                        time_difference.total_seconds() <= 86500
-                        and time_difference.total_seconds() >= 0
-                    ):
-                        if intern not in user.interns_applied_for.all():
-                            intern_data = f"""{intern.intern_name}\t{intern.company}\t{intern.role}\t{timezone.localtime(intern.deadline)}\n"""
-                            email_body = email_body + intern_data
-                            count = count + 1
+                    intern_data = f"""{intern.intern_name}\t{intern.company}\t{intern.role}\t{timezone.localtime(intern.deadline)}\n"""
+                    email_body = email_body + intern_data
+                    count = count + 1
             if count != 0:
                 sender = EMAIL_HOST_USER
                 recipient = user.email

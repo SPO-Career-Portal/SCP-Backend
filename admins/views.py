@@ -35,11 +35,6 @@ class Login(APIView):
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request):
-        if IsLoggedIn(request) is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
-
 
 class Logout(APIView):
     def post(self, request):
