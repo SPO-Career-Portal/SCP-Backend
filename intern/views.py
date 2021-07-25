@@ -5,6 +5,12 @@ from rest_framework import status
 from intern.models import Intern
 from user.models import InternResume
 from django.utils import timezone
+from src.settings_email import (
+    EMAIL_BODY,
+    EMAIL_HOST_USER,
+    EMAIL_SUBJECT,
+)
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -32,26 +38,38 @@ class Register(APIView):
                     and user.department in intern_applied.eligible_branches
                     and user.batch in intern_applied.eligible_batches
                 ):
-                    if user.github and user.linkedin and user.mastercv:
-                        if resume:
-                            if InternResume.objects.filter(
-                                user=user, intern=intern_applied
-                            ).exists():
-                                response = {
-                                    "message": "You have already applied for this offer"
-                                }
-                                return Response(
-                                    response, status=status.HTTP_400_BAD_REQUEST
-                                )
-                            else:
-                                resume_relation = InternResume(
-                                    user=user, intern=intern_applied, resume=resume
-                                )
-                            resume_relation.save()
+                    if user.github and user.linkedin and user.mastercv and resume:
+                        if InternResume.objects.filter(
+                            user=user, intern=intern_applied
+                        ).exists():
                             response = {
-                                "message": "You have successfully registered for this internship"
+                                "message": "You have already applied for this offer"
                             }
-                            return Response(response, status=status.HTTP_200_OK)
+                            return Response(
+                                response, status=status.HTTP_400_BAD_REQUEST
+                            )
+                        else:
+                            resume_relation = InternResume(
+                                user=user, intern=intern_applied, resume=resume
+                            )
+                        sender = EMAIL_HOST_USER
+                        recipient = user.email
+                        name = user.name
+                        subject = EMAIL_SUBJECT["InternConfirmation"]
+                        body = EMAIL_BODY["InternConfirmation"].format(
+                            name=name,
+                            intern_name=intern_applied.intern_name,
+                            role=intern_applied.role,
+                            company=intern_applied.company,
+                        )
+                        send_mail(
+                            subject, body, sender, [recipient], fail_silently=False
+                        )
+                        resume_relation.save()
+                        response = {
+                            "message": "You have successfully registered for this internship"
+                        }
+                        return Response(response, status=status.HTTP_200_OK)
                     response = {"message": "User profile update incomplete"}
                     return Response(response, status=status.HTTP_401_UNAUTHORIZED)
                 else:

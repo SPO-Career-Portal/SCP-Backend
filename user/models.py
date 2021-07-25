@@ -21,7 +21,7 @@ class User(models.Model):
     resume1 = models.URLField(max_length=300, unique=True, blank=True, null=True)
     resume2 = models.URLField(max_length=300, unique=True, blank=True, null=True)
     email = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=20, null=True, blank=True, editable=False)
+    password = models.CharField(max_length=100, null=True, blank=True, editable=False)  
     activated = models.BooleanField(editable=False, default=False)
     placements_applied_for = models.ManyToManyField(
         Placement, editable=False, blank=True, through="PlacementResume"
@@ -29,7 +29,7 @@ class User(models.Model):
     interns_applied_for = models.ManyToManyField(
         Intern, editable=False, blank=True, through="InternResume"
     )
-    verification_code = models.CharField(
+    verification_code = models.CharField(  
         max_length=70, blank=True, null=True, editable=False
     )
 
@@ -49,7 +49,7 @@ class PlacementResume(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     placement = models.ForeignKey(Placement, on_delete=models.CASCADE, editable=False)
     resume = models.URLField(max_length=300, blank=False, editable=False)
-    registered_at = models.DateTimeField(null=True)
+    registered_at = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.registered_at = timezone.now()
@@ -60,7 +60,7 @@ class InternResume(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     intern = models.ForeignKey(Intern, on_delete=models.CASCADE, editable=False)
     resume = models.URLField(max_length=300, blank=False, editable=False)
-    registered_at = models.DateTimeField(null=True)
+    registered_at = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.registered_at = timezone.now()

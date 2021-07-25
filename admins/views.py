@@ -35,11 +35,6 @@ class Login(APIView):
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request):
-        if IsLoggedIn(request) is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
-
 
 class Logout(APIView):
     def post(self, request):
@@ -176,13 +171,15 @@ class exportInternData(APIView):
                         "Github",
                         "Linkedin",
                         "MasterCV",
-                        "Resume"
+                        "Resume",
                     ]
                 )
 
                 users = User.objects.filter(interns_applied_for=intern)
                 for user in users:
-                    intern_resume = InternResume.objects.filter(user=user, intern=intern)
+                    intern_resume = InternResume.objects.filter(
+                        user=user, intern=intern
+                    )
                     writer.writerow(
                         [
                             user.name,
@@ -194,7 +191,7 @@ class exportInternData(APIView):
                             user.github,
                             user.linkedin,
                             user.mastercv,
-                            intern_resume[0].resume
+                            intern_resume[0].resume,
                         ]
                     )
                 response.status_code = status.HTTP_200_OK
@@ -203,7 +200,6 @@ class exportInternData(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
 
 class exportPlacementData(APIView):
@@ -228,13 +224,15 @@ class exportPlacementData(APIView):
                         "Github",
                         "Linkedin",
                         "MasterCV",
-                        "Resume"
+                        "Resume",
                     ]
                 )
 
                 users = User.objects.filter(placements_applied_for=placement)
                 for user in users:
-                    placement_resume = PlacementResume.objects.filter(user=user, placement=placement)
+                    placement_resume = PlacementResume.objects.filter(
+                        user=user, placement=placement
+                    )
                     writer.writerow(
                         [
                             user.name,
@@ -246,7 +244,7 @@ class exportPlacementData(APIView):
                             user.github,
                             user.linkedin,
                             user.mastercv,
-                            placement_resume[0].resume
+                            placement_resume[0].resume,
                         ]
                     )
                 response.status_code = status.HTTP_200_OK

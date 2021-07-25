@@ -117,11 +117,6 @@ class Login(APIView):
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def get(self, request):
-        if IsLoggedIn(request) is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
-
 
 class Logout(APIView):
     def post(self, request):
@@ -195,14 +190,11 @@ class RegisterationView(APIView):
     def post(self, request):
         if IsRegistered(request) is False:
             ActivationMailer(request)
-            return Response(status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_202_ACCEPTED)
         if IsRegistered(request) is True:
-            return Response(status.HTTP_403_FORBIDDEN)
+            return Response(status=status.HTTP_403_FORBIDDEN)
         if IsRegistered(request) is None:
-            return Response(status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request):
-        return Response(status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 def hashpass(password):
@@ -230,7 +222,7 @@ class SetPasswordAndActivate(APIView):
                     "code": "status.HTTP_401_UNAUTHORIZED",
                     "message": "Token already used",
                 }
-                return Response(response, status=401)
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
         except:
             response = {
                 "code": "status.HTTP_401_UNAUTHORIZED",
@@ -294,7 +286,7 @@ class ResetPassword(APIView):
                 else:
                     response = {
                         "status": "failure",
-                        "code": 401,
+                        "code": status.HTTP_401_UNAUTHORIZED,
                         "message": "the retyped password doesn't match",
                     }
                     return Response(response)
@@ -304,7 +296,7 @@ class ResetPassword(APIView):
                     "code": "status.HTTP_401_UNAUTHORIZED",
                     "message": "Unauthorised user or Account not activated",
                 }
-                return Response(response, status=401)
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
         except:
             response = {
