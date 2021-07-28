@@ -8,8 +8,7 @@ from .utils import IsLoggedIn
 from intern.models import Intern
 from placement.models import Placement
 from user.models import User, InternResume, PlacementResume
-from intern.serializers import InternSerializer
-from placement.serializers import PlacementSerializer
+from .serializers import InternSerializer, PlacementSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from user.utils import CHECK_PASSWORD
@@ -77,15 +76,12 @@ class AddInternship(APIView):
                 intern = Intern(
                     intern_name=request.data["intern_name"],
                     company=request.data["company"],
-                    duration=request.data["duration"],
                     role=request.data["role"],
                     description=request.data["description"],
                     eligible_batches=request.data["eligible_batches"],
                     eligible_branches=request.data["eligible_branches"],
                     eligible_programmes=request.data["eligible_programmes"],
                     deadline=request.data["deadline"],
-                    intern_start_month=request.data["intern_start_month"],
-                    intern_end_month=request.data["intern_end_month"],
                 )
                 intern.save()
                 return Response(status=status.HTTP_200_OK)

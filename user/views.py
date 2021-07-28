@@ -138,7 +138,7 @@ class Edit(APIView):
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "linkedin" in request.data:
-                    if linkValidator(request.data["linkedin"], "linkedin.com"):
+                    if linkValidator(request.data["linkedin"], "linkedin.com/in"):
                         user.linkedin = request.data["linkedin"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
@@ -216,7 +216,7 @@ class SetPasswordAndActivate(APIView):
                     "code": status.HTTP_200_OK,
                     "message": "Password set succesfully and now you are registered",
                 }
-                return Response(response)
+                return Response(response, status=status.HTTP_200_OK)
             else:
                 response = {
                     "code": "status.HTTP_401_UNAUTHORIZED",
@@ -244,12 +244,11 @@ class ResetPasswordEmail(APIView):
             subject = EMAIL_SUBJECT["PasswordReset"]
             body = EMAIL_BODY["PasswordReset"].format(name=name, link=user_link)
             send_mail(subject, body, sender, [recipient], fail_silently=False)
-            return HttpResponse(
-                "Password Reset Email sent successfully, Please Check your inbox.",
-                status=200,
-            )
+            user_data.activated = False
+            user_data.save()
+            return Response({"message":"Password Reset Email sent successfully, Please Check your inbox."}, status=status.HTTP_200_OK)
         except:
-            return HttpResponse("Please set up email host details!", status=206)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 def pass_checker(old, password):
@@ -266,37 +265,37 @@ class ResetPassword(APIView):
             password = user_data.password
             password = password.encode()
             if user_data.activated == True:
+                response = {
+                    "status": "failure",
+                    "message": "Invalid Link"
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            else:
                 if new1 == new2:
                     if pass_checker(old, password) == True:
                         user_data.password = hashpass(new1).decode()
+                        user_data.activated = True
                         user_data.save()
                         response = {
                             "status": "success",
                             "code": status.HTTP_200_OK,
                             "message": "Password reset succesfull and now you can login",
                         }
-                        return Response(response)
+                        return Response(response, status=status.HTTP_200_OK)
                     else:
                         response = {
                             "status": "failure",
                             "code": status.HTTP_401_UNAUTHORIZED,
                             "message": "wrong old password",
                         }
-                        return Response(response)
+                        return Response(response, status=status.HTTP_401_UNAUTHORIZED)
                 else:
                     response = {
                         "status": "failure",
                         "code": status.HTTP_401_UNAUTHORIZED,
                         "message": "the retyped password doesn't match",
                     }
-                    return Response(response)
-
-            else:
-                response = {
-                    "code": "status.HTTP_401_UNAUTHORIZED",
-                    "message": "Unauthorised user or Account not activated",
-                }
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                    return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
         except:
             response = {

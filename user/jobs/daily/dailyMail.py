@@ -28,6 +28,7 @@ class Job(DailyJob):
                 time_difference = placement.deadline - timezone.now()
                 if (
                     user.program in placement.eligible_programmes
+                    and user.activated == True 
                     and user.department in placement.eligible_branches
                     and user.batch in placement.eligible_batches
                     and time_difference.total_seconds() <= 86500
@@ -55,6 +56,7 @@ class Job(DailyJob):
                 time_difference = intern.deadline - timezone.now()
                 if (
                     user.program in intern.eligible_programmes
+                    and user.activated == True
                     and user.department in intern.eligible_branches
                     and user.batch in intern.eligible_batches
                     and time_difference.total_seconds() <= 86500
