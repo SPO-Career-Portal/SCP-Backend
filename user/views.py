@@ -143,17 +143,17 @@ class Edit(APIView):
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "mastercv" in request.data:
-                    if linkValidator(request.data["mastercv"], "google.com"):
+                    if linkValidator(request.data["mastercv"], "drive.google.com"):
                         user.mastercv = request.data["mastercv"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "resume1" in request.data:
-                    if linkValidator(request.data["resume1"], "google.com"):
+                    if linkValidator(request.data["resume1"], "drive.google.com"):
                         user.resume1 = request.data["resume1"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
                 if "resume2" in request.data:
-                    if linkValidator(request.data["resume2"], "google.com"):
+                    if linkValidator(request.data["resume2"], "drive.google.com"):
                         user.resume2 = request.data["resume2"]
                     else:
                         return Response(response1, status=status.HTTP_400_BAD_REQUEST)
